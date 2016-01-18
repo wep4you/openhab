@@ -8,12 +8,8 @@
  */
 package org.openhab.binding.netatmo.welcome.internal;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
-
 import java.util.Calendar;
 import java.util.Collection;
-import java.util.Dictionary;
-import java.util.Enumeration;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -21,32 +17,22 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.apache.commons.lang.StringUtils;
 import org.openhab.binding.netatmo.NetatmoBindingProvider;
 import org.openhab.binding.netatmo.internal.NetatmoException;
 import org.openhab.binding.netatmo.internal.OAuthCredentials;
-import org.openhab.binding.netatmo.internal.messages.GetStationsDataRequest;
-import org.openhab.binding.netatmo.internal.messages.GetStationsDataResponse;
 import org.openhab.binding.netatmo.internal.messages.NetatmoError;
-import org.openhab.binding.netatmo.internal.messages.RefreshTokenRequest;
-import org.openhab.binding.netatmo.internal.messages.RefreshTokenResponse;
 import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataRequest;
 import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse;
 import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Camera;
 import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Event;
 import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Home;
 import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Person;
-import org.openhab.core.binding.AbstractActiveBinding;
 import org.openhab.core.events.EventPublisher;
 import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.library.types.DecimalType;
 import org.openhab.core.library.types.OnOffType;
 import org.openhab.core.library.types.StringType;
-import org.openhab.core.types.Command;
 import org.openhab.core.types.State;
-import org.osgi.framework.BundleContext;
-import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 	
@@ -62,8 +48,6 @@ public class NetatmoWelcomeBinding {
 
 	private static final Logger logger = 
 		LoggerFactory.getLogger(NetatmoWelcomeBinding.class);
-
-	private static final String DEFAULT_USER_ID = "DEFAULT_USER";
 
 	protected static final String CONFIG_CLIENT_ID = "clientid";
 	protected static final String CONFIG_CLIENT_SECRET = "clientsecret";
