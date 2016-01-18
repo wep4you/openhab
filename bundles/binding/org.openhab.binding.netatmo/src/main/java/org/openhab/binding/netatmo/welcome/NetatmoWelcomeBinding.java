@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.netatmo.welcome.internal;
+package org.openhab.binding.netatmo.welcome;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -19,14 +19,13 @@ import java.util.Set;
 
 import org.openhab.binding.netatmo.NetatmoBindingProvider;
 import org.openhab.binding.netatmo.internal.NetatmoException;
+import org.openhab.binding.netatmo.internal.NetatmoMeasureType;
 import org.openhab.binding.netatmo.internal.OAuthCredentials;
 import org.openhab.binding.netatmo.internal.messages.NetatmoError;
-import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataRequest;
-import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse;
-import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Camera;
-import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Event;
-import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Home;
-import org.openhab.binding.netatmo.welcome.internal.messages.GetHomeDataResponse.Person;
+import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Camera;
+import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Event;
+import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Home;
+import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Person;
 import org.openhab.core.events.EventPublisher;
 import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.library.types.DecimalType;
@@ -42,41 +41,12 @@ import org.slf4j.LoggerFactory;
  * like querying a Website/Device.
  * 
  * @author Ing. Peter Weiss
- * @since 1.8.0
+ * @since 1.9.0
  */
 public class NetatmoWelcomeBinding {
 
 	private static final Logger logger = 
 		LoggerFactory.getLogger(NetatmoWelcomeBinding.class);
-
-	protected static final String CONFIG_CLIENT_ID = "clientid";
-	protected static final String CONFIG_CLIENT_SECRET = "clientsecret";
-	protected static final String CONFIG_REFRESH = "refresh";
-	protected static final String CONFIG_REFRESH_TOKEN = "refreshtoken";
-	protected static final String CONFIG_SCOPE = "scope";
-
-	protected static final String HOME_NAME = "Name";
-	protected static final String HOME_PLACE_COUNTRY = "PlaceCountry";
-	protected static final String HOME_PLACE_TIMEZONE = "PlaceTimezone";
-
-	protected static final String HOME_PERSON_OUTOFSIGHT = "OutOfSight";
-	protected static final String HOME_PERSON_PSEUDO = "Pseudo";
-	protected static final String HOME_PERSON_LASTSEEN = "LastSeen";
-	protected static final String HOME_PERSON_FACE_ID = "FaceId";
-	protected static final String HOME_PERSON_FACE_KEY = "FaceKey";
-
-	protected static final String HOME_UNKNWOWN_HOME_COUNT = "HomeCount";
-	protected static final String HOME_UNKNWOWN_AWAY_COUNT = "AwayCount";
-	protected static final String HOME_UNKNWOWN_OUTOFSIGHT_LIST = "OutOfSightList";
-	protected static final String HOME_UNKNWOWN_LASTSEEN_LIST = "LastSeenList";
-	protected static final String HOME_UNKNWOWN_FACE_ID_LIST= "FaceIdList";
-	protected static final String HOME_UNKNWOWN_FACE_KEY_LIST = "FaceKeyList";
-	 
-	protected static final String HOME_CAMERA_NAME = "Name";
-	protected static final String HOME_CAMERA_STATUS = "Status";
-	protected static final String HOME_CAMERA_SD_STATUS = "SdStatus";
-	protected static final String HOME_CAMERA_ALIM_STATUS = "AlimStatus";
-
 	
 	private final Map<String, Map<String, Person>> configuredHomeKnownPersons = new HashMap<String, Map<String, Person>>();
 	private final Map<String, Map<String, Person>> configuredHomeUnKnownPersons = new HashMap<String, Map<String, Person>>();
@@ -84,9 +54,13 @@ public class NetatmoWelcomeBinding {
 	private final Map<String, Map<String, Camera>> configuredhomeCameras = new HashMap<String, Map<String, Camera>>();
 
 
-
+	/**
+	 * 
+	 * @param oauthCredentials
+	 * @param providers
+	 * @param eventPublisher
+	 */
 	public void execute(OAuthCredentials oauthCredentials, Collection<NetatmoBindingProvider> providers, EventPublisher eventPublisher) {
-		// the frequently executed code (polling) goes here ...
 
 		logger.debug("Querying NetatmoWelcome API");
 		try {				
@@ -102,7 +76,8 @@ public class NetatmoWelcomeBinding {
 			for (final NetatmoBindingProvider provider : providers) {
 				for (final String itemName : provider.getItemNames()) {
 					final String homeId = provider.getHomeId(itemName);
-					final String attribute = provider.getAttribute(itemName);
+					final NetatmoWelcomeAttributes attribute = provider.getAttribute(itemName);
+
 					State state = null;
 
 					if (homeId != null)

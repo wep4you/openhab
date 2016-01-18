@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.netatmo.welcome.internal.messages;
+package org.openhab.binding.netatmo.welcome;
 
 import java.util.Date;
 import java.util.List;

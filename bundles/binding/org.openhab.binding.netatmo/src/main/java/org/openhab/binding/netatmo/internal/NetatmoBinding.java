@@ -34,7 +34,7 @@ import org.openhab.binding.netatmo.internal.messages.MeasurementResponse;
 import org.openhab.binding.netatmo.internal.messages.NetatmoError;
 import org.openhab.binding.netatmo.internal.messages.RefreshTokenRequest;
 import org.openhab.binding.netatmo.internal.messages.RefreshTokenResponse;
-import org.openhab.binding.netatmo.welcome.internal.NetatmoWelcomeBinding;
+import org.openhab.binding.netatmo.welcome.NetatmoWelcomeBinding;
 import org.openhab.core.binding.AbstractActiveBinding;
 import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.library.types.DecimalType;
@@ -72,7 +72,6 @@ public class NetatmoBinding extends
 	protected static final String CONFIG_REFRESH_TOKEN = "refreshtoken";
 	protected static final String CONFIG_PRESSURE_UNIT = "pressureunit";
 	protected static final String CONFIG_UNIT_SYSTEM = "unitsystem";
-
 
 	/**
 	 * The refresh interval which is used to poll values from the Netatmo server
@@ -115,12 +114,12 @@ public class NetatmoBinding extends
 	/**
 	 * {@inheritDoc}
 	 */
+	@SuppressWarnings("incomplete-switch")
 	@Override
 	protected void execute() {
 		logger.debug("Querying Netatmo API");
-			
 		for (String userid : credentialsCache.keySet()) {
-						
+
 			OAuthCredentials oauthCredentials = getOAuthCredentials(userid);
 			if (oauthCredentials.noAccessToken()) {
 				// initial run after a restart, so get an access token first
@@ -198,31 +197,31 @@ public class NetatmoBinding extends
 							case WINDANGLE:
 							case GUSTSTRENGTH:
 							case GUSTANGLE:
-							{
-								BigDecimal value = getValue(
-										deviceMeasureValueMap, measureType,
-										createKey(deviceId, moduleId, scale));
-								// Protect that sometimes Netatmo returns null where
-								// numeric value is awaited (issue #1848)
-								if (value != null) {
-									if (NetatmoMeasureType
-											.isTemperature(measureType)) {
-										value = unitSystem.convertTemp(value);
-									} else if (NetatmoMeasureType
-											.isRain(measureType)) {
-										value = unitSystem.convertRain(value);
-									} else if (NetatmoMeasureType
-											.isPressure(measureType)) {
-										value = pressureUnit.convertPressure(value);
-									} else if (NetatmoMeasureType
-											.isWind(measureType)) {
-										value = unitSystem.convertWind(value);
-									}
+								{
+									BigDecimal value = getValue(
+											deviceMeasureValueMap, measureType,
+											createKey(deviceId, moduleId, scale));
+									// Protect that sometimes Netatmo returns null where
+									// numeric value is awaited (issue #1848)
+									if (value != null) {
+										if (NetatmoMeasureType
+												.isTemperature(measureType)) {
+											value = unitSystem.convertTemp(value);
+										} else if (NetatmoMeasureType
+												.isRain(measureType)) {
+											value = unitSystem.convertRain(value);
+										} else if (NetatmoMeasureType
+												.isPressure(measureType)) {
+											value = pressureUnit.convertPressure(value);
+										} else if (NetatmoMeasureType
+												.isWind(measureType)) {
+											value = unitSystem.convertWind(value);
+										}
 
-									state = new DecimalType(value);
+										state = new DecimalType(value);
+									}
 								}
-							}
-							break;
+								break;
 							case DATE_MIN_TEMP:
 							case DATE_MAX_TEMP:
 							case DATE_MIN_HUM:
@@ -234,19 +233,19 @@ public class NetatmoBinding extends
 							case DATE_MIN_CO2:
 							case DATE_MAX_CO2:
 							case DATE_MAX_GUST:
-							{
-								final BigDecimal value = getValue(
-										deviceMeasureValueMap, measureType,
-										createKey(deviceId, moduleId, scale));
-								if (value != null) {
-									final Calendar calendar = GregorianCalendar
-											.getInstance();
-									calendar.setTimeInMillis(value.longValue() * 1000);
+								{
+									final BigDecimal value = getValue(
+											deviceMeasureValueMap, measureType,
+											createKey(deviceId, moduleId, scale));
+									if (value != null) {
+										final Calendar calendar = GregorianCalendar
+												.getInstance();
+										calendar.setTimeInMillis(value.longValue() * 1000);
 
-									state = new DateTimeType(calendar);
+										state = new DateTimeType(calendar);
+									}
 								}
-							}
-							break;
+								break;
 							case BATTERYVP:
 							case RFSTATUS:
 								for (Device device : oauthCredentials.getStationsDataResponse.getDevices()) {
@@ -297,8 +296,8 @@ public class NetatmoBinding extends
 											state = stationPositions.get(device).getLongitude();
 											break;
 										case ALTITUDE:
-											state = new DecimalType(Math.round(unitSystem.
-													convertAltitude(stationPositions.get(device).getAltitude().doubleValue())));
+												state = new DecimalType(Math.round(unitSystem.
+														convertAltitude(stationPositions.get(device).getAltitude().doubleValue())));
 											break;
 										case WIFISTATUS:
 											state = new DecimalType(

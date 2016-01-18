@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Andreas Brenk
  * @author Rob Nielsen
+ * @author Ing. Peter Weiss
  * @since 1.4.0
  * @see <a
  *      href="http://dev.netatmo.com/doc/authentication/refreshtoken">refreshtoken</a>

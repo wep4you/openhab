@@ -9,6 +9,7 @@
 package org.openhab.binding.netatmo.internal;
 
 import org.openhab.binding.netatmo.NetatmoBindingProvider;
+import org.openhab.binding.netatmo.welcome.NetatmoWelcomeAttributes;
 import org.openhab.core.binding.BindingConfig;
 import org.openhab.core.items.Item;
 import org.openhab.core.library.items.DateTimeItem;
@@ -220,7 +221,7 @@ public class NetatmoGenericBindingProvider extends AbstractGenericBindingProvide
      * {@inheritDoc}
      */
 	@Override
-	public String getAttribute(String itemName) {
+	public NetatmoWelcomeAttributes getAttribute(String itemName) {
 		final NetatmoBindingConfig config = (NetatmoBindingConfig) this.bindingConfigs.get(itemName);
 		return config != null ? config.attribute : null;
 	}
@@ -252,11 +253,11 @@ public class NetatmoGenericBindingProvider extends AbstractGenericBindingProvide
         	switch (configParts.length) {
         	case 3:
         		config.homeId=configParts[1];
-        		config.attribute=configParts[2];
+        		config.attribute=NetatmoWelcomeAttributes.fromString(configParts[2]);
         		break;
         	case 4:
         		config.homeId=configParts[1];
-        		config.attribute=configParts[3];
+        		config.attribute=NetatmoWelcomeAttributes.fromString(configParts[3]);
 
         		//Check Format (Mac Adress with : is a camera)
         		String sTmp=configParts[2];
@@ -332,7 +333,7 @@ public class NetatmoGenericBindingProvider extends AbstractGenericBindingProvide
 		String homeId;
 		String personId;
 		String cameraId;
-		String attribute;
+		NetatmoWelcomeAttributes attribute;
 
         @Override
         public String toString() {
@@ -345,29 +346,5 @@ public class NetatmoGenericBindingProvider extends AbstractGenericBindingProvide
 					+ "]";
         }
     }
-    
-	/**
-	 * This is a helper class holding binding specific configuration details
-	 * 
- * @author Ing. Peter Weiss
- * @since 1.8.0
- * 	 
- */
-	class NetatmoWelcomeBindingConfig implements BindingConfig {
-		// put member fields here which holds the parsed values
-		public String homeId;
-		public String personId;
-		public String cameraId;
-		public String attribute;
-		
-		@Override
-		public String toString() {
-			return "NetatmoWelcomeBindingConfig [homeId=" + this.homeId
-					+ " personId=" + this.personId
-					+ " cameraId=" + this.cameraId
-					+ " attribute=" + this.attribute
-					+ "]";
-		}
-	}
 
 }

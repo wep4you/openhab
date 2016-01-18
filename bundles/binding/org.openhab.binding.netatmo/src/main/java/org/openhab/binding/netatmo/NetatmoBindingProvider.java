@@ -10,6 +10,7 @@ package org.openhab.binding.netatmo;
 
 import org.openhab.binding.netatmo.internal.NetatmoMeasureType;
 import org.openhab.binding.netatmo.internal.NetatmoScale;
+import org.openhab.binding.netatmo.welcome.NetatmoWelcomeAttributes;
 import org.openhab.core.binding.BindingProvider;
 
 /**
@@ -104,7 +105,7 @@ public interface NetatmoBindingProvider extends BindingProvider {
 	 * @return the NetatmoWelcome Attribute of the Item identified by {@code itemName} if
 	 *         it has a NetatmoWelcome binding, <code>null</code> otherwise
 	 */
-	String getAttribute(String itemName);
+	NetatmoWelcomeAttributes getAttribute(String itemName);
 
 	/**
 	 * Queries the Netatmo Welcome Camera of the given {@code itemName}.
