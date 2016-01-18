@@ -9,7 +9,9 @@
 package org.openhab.binding.netatmo.internal;
 
 import org.openhab.binding.netatmo.NetatmoBindingProvider;
-import org.openhab.binding.netatmo.welcome.NetatmoWelcomeAttributes;
+import org.openhab.binding.netatmo.internal.weather.NetatmoMeasureType;
+import org.openhab.binding.netatmo.internal.weather.NetatmoScale;
+import org.openhab.binding.netatmo.internal.welcome.NetatmoWelcomeAttributes;
 import org.openhab.core.binding.BindingConfig;
 import org.openhab.core.items.Item;
 import org.openhab.core.library.items.DateTimeItem;
@@ -26,7 +28,24 @@ import org.slf4j.LoggerFactory;
  * This class is responsible for parsing the binding configuration.
  *
  * <p>
- * Valid bindings for the main device are:
+ *  Valid bindings for the main device are - since 1.9
+ * <ul>
+ * <li><code>{ netatmo="weather#&lt;device_id&gt;#Measurement" }</code></li>
+ * <ul>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Temperature" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Humidity" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Co2" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Pressure" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Noise" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#WifiStatus" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Altitude" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Latitude" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#Longitude" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#TimeStamp" }</code></li>
+ * </ul>
+ * </li>
+ * </ul>
+ * Valid bindings for the main device are (@deprecated) - For backward compatibility:
  * <ul>
  * <li><code>{ netatmo="&lt;device_id&gt;#Measurement" }</code></li>
  * <ul>
@@ -44,7 +63,23 @@ import org.slf4j.LoggerFactory;
  * </li>
  * </ul>
  * <p>
- * Valid bindings for a module are:
+ *  * Valid bindings for a module are - since 1.9:
+ * <ul>
+ * <li>
+ * <code>{ netatmo="&lt;device_id&gt;#&lt;module_id&gt;#Measurement" }</code></li>
+ * <ul>
+ * <li>
+ * <code>{ netatmo="weather#00:00:00:00:00:00#00:00:00:00:00:00#Temperature" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#00:00:00:00:00:00#Humidity" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#00:00:00:00:00:00#Co2" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#00:00:00:00:00:00#Rain" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#00:00:00:00:00:00#RfStatus" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#00:00:00:00:00:00#BatteryVp" }</code></li>
+ * <li><code>{ netatmo="weather#00:00:00:00:00:00#00:00:00:00:00:00#TimeStamp" }</code></li>
+ * </ul>
+ * </li>
+ * </ul>
+ * Valid bindings for a module are (@deprecated) - For backward compatibility:
  * <ul>
  * <li>
  * <code>{ netatmo="&lt;device_id&gt;#&lt;module_id&gt;#Measurement" }</code></li>
@@ -81,7 +116,7 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li><code>{ netatmo="welcome#1234567890abcdefghijklmn#12345678-9abc-defg-hijk-lmnopqrstuvw#Pseudo" }</code></li>
  * <li><code>{ netatmo="welcome#1234567890abcdefghijklmn#12345678-9abc-defg-hijk-lmnopqrstuvw#LastSeen" }</code></li>
- * <li><code>{ nnetatmo="welcome#1234567890abcdefghijklmn#12345678-9abc-defg-hijk-lmnopqrstuvw#OutOfSight" }</code></li>
+ * <li><code>{ netatmo="welcome#1234567890abcdefghijklmn#12345678-9abc-defg-hijk-lmnopqrstuvw#OutOfSight" }</code></li>
  * <li><code>{ netatmo="welcome#1234567890abcdefghijklmn#12345678-9abc-defg-hijk-lmnopqrstuvw#FaceId" }</code></li>
  * <li><code>{ netatmo="welcome#1234567890abcdefghijklmn#12345678-9abc-defg-hijk-lmnopqrstuvw#FaceKey" }</code></li>
  * </ul>
@@ -272,6 +307,49 @@ public class NetatmoGenericBindingProvider extends AbstractGenericBindingProvide
         				"A Netatmo welcome binding configuration must consist of three, four or five parts - please verify your *.items file");
         	}
         }
+        else if(configParts.length > 0 && "weather".equals(configParts[0])) {
+        	String measureTypeString;
+        	switch (configParts.length) {
+        	case 3:
+        		config.deviceId = configParts[1];
+        		measureTypeString = configParts[2];
+        		break;
+        	case 4:
+        		config.deviceId = configParts[1];
+        		config.moduleId = configParts[2];
+        		measureTypeString = configParts[3];
+        		break;
+        	case 5:
+        		config.userid = configParts[1];
+        		config.deviceId = configParts[2];
+        		config.moduleId = configParts[3];
+        		measureTypeString = configParts[4];
+        		break;
+        	default:
+        		throw new BindingConfigParseException(
+        				"A Netatmo weather binding configuration must consist of three four or five parts - please verify your *.items file");
+        	}
+        	/*
+        	 * use a ',' when including scale so that it does not break backwards
+        	 * compatibility with case 4 above.
+        	 */
+        	final String[] measureTypeParts = measureTypeString.split(",");
+        	switch (measureTypeParts.length) {
+        	case 1:
+        		config.measureType = NetatmoMeasureType.fromString(measureTypeParts[0]);
+        		config.netatmoScale = config.measureType.getDefaultScale();
+        		break;
+        	case 2:
+        		config.measureType = NetatmoMeasureType.fromString(measureTypeParts[0]);
+        		config.netatmoScale = NetatmoScale.fromString(measureTypeParts[1]);
+        		break;
+        	default:
+        		throw new BindingConfigParseException(
+        				"The last part of the Netatmo binding configuration must be 'type' or 'type,scale'"
+        						+ " - please verify your *.items file");
+        	}        		
+        }
+        // Old format for compatibility reasons
         else {
         	String measureTypeString;
         	switch (configParts.length) {

@@ -1,9 +1,6 @@
-package org.openhab.binding.netatmo.internal;
+package org.openhab.binding.netatmo.internal.authentication;
 
-import org.openhab.binding.netatmo.internal.messages.GetStationsDataRequest;
-import org.openhab.binding.netatmo.internal.messages.GetStationsDataResponse;
-import org.openhab.binding.netatmo.internal.messages.RefreshTokenRequest;
-import org.openhab.binding.netatmo.internal.messages.RefreshTokenResponse;
+import org.openhab.binding.netatmo.internal.NetatmoException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 /**
@@ -29,7 +26,7 @@ public class OAuthCredentials {
 		 *      href="http://dev.netatmo.com/doc/authentication/usercred">Client
 		 *      Credentials</a>
 		 */
-		String clientId;
+		private String clientId;
 
 		/**
 		 * The client secret to access the Netatmo API. Normally set in
@@ -39,7 +36,7 @@ public class OAuthCredentials {
 		 *      href="http://dev.netatmo.com/doc/authentication/usercred">Client
 		 *      Credentials</a>
 		 */
-		String clientSecret;
+		private String clientSecret;
 
 		/**
 		 * The refresh token to access the Netatmo API. Normally set in
@@ -50,7 +47,7 @@ public class OAuthCredentials {
 		 * @see <a
 		 *      href="http://dev.netatmo.com/doc/authentication/refreshtoken">Refresh&nbsp;Token</a>
 		 */
-		String refreshToken;
+		private String refreshToken;
 
 		/**
 		 * The access token to access the Netatmo API. Automatically renewed
@@ -61,8 +58,14 @@ public class OAuthCredentials {
 		 *      Token</a>
 		 * @see #refreshAccessToken()
 		 */
-		String accessToken;
+		private String accessToken;
 
+		/**
+		 * 
+		 */
+		private boolean firstExecution = true;
+
+		
 		public String getAccessToken() {
 			return accessToken;
 		}
@@ -71,10 +74,38 @@ public class OAuthCredentials {
 			this.accessToken = accessToken;
 		}
 
-		GetStationsDataResponse getStationsDataResponse = null;
-		GetStationsDataRequest getStationsDataRequest = null;
+		public String getClientId() {
+			return clientId;
+		}
 
-		boolean firstExecution = true;
+		public void setClientId(String clientId) {
+			this.clientId = clientId;
+		}
+
+		public String getClientSecret() {
+			return clientSecret;
+		}
+
+		public void setClientSecret(String clientSecret) {
+			this.clientSecret = clientSecret;
+		}
+
+		public String getRefreshToken() {
+			return refreshToken;
+		}
+
+		public void setRefreshToken(String refreshToken) {
+			this.refreshToken = refreshToken;
+		}
+
+
+		public boolean isFirstExecution() {
+			return firstExecution;
+		}
+
+		public void setFirstExecution(boolean firstExecution) {
+			this.firstExecution = firstExecution;
+		}
 
 		public boolean noAccessToken() {
 			return this.accessToken == null;
@@ -84,7 +115,7 @@ public class OAuthCredentials {
 			logger.debug("Refreshing access token.");
 
 			final RefreshTokenRequest request = new RefreshTokenRequest(
-					this.clientId, this.clientSecret, this.refreshToken);
+					this.getClientId(), this.getClientSecret(), this.getRefreshToken());
 			logger.debug("Request: {}", request);
 
 			final RefreshTokenResponse response = request.execute();
@@ -100,8 +131,6 @@ public class OAuthCredentials {
 
 			this.accessToken = response.getAccessToken();
 
-			getStationsDataRequest = new GetStationsDataRequest(this.accessToken);
-			getStationsDataResponse = getStationsDataRequest.execute();
 		}
 
 	}

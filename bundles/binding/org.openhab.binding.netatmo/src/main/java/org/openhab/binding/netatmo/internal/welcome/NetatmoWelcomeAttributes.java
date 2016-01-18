@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.netatmo.welcome;
+package org.openhab.binding.netatmo.internal.welcome;
 
 import org.apache.commons.lang.StringUtils;
 

@@ -8,9 +8,9 @@
  */
 package org.openhab.binding.netatmo;
 
-import org.openhab.binding.netatmo.internal.NetatmoMeasureType;
-import org.openhab.binding.netatmo.internal.NetatmoScale;
-import org.openhab.binding.netatmo.welcome.NetatmoWelcomeAttributes;
+import org.openhab.binding.netatmo.internal.weather.NetatmoMeasureType;
+import org.openhab.binding.netatmo.internal.weather.NetatmoScale;
+import org.openhab.binding.netatmo.internal.welcome.NetatmoWelcomeAttributes;
 import org.openhab.core.binding.BindingProvider;
 
 /**

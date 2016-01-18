@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.netatmo.welcome;
+package org.openhab.binding.netatmo.internal.welcome;
 
 import java.util.Calendar;
 import java.util.Collection;
@@ -19,13 +19,12 @@ import java.util.Set;
 
 import org.openhab.binding.netatmo.NetatmoBindingProvider;
 import org.openhab.binding.netatmo.internal.NetatmoException;
-import org.openhab.binding.netatmo.internal.NetatmoMeasureType;
-import org.openhab.binding.netatmo.internal.OAuthCredentials;
+import org.openhab.binding.netatmo.internal.authentication.OAuthCredentials;
 import org.openhab.binding.netatmo.internal.messages.NetatmoError;
-import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Camera;
-import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Event;
-import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Home;
-import org.openhab.binding.netatmo.welcome.GetHomeDataResponse.Person;
+import org.openhab.binding.netatmo.internal.welcome.GetHomeDataResponse.Camera;
+import org.openhab.binding.netatmo.internal.welcome.GetHomeDataResponse.Event;
+import org.openhab.binding.netatmo.internal.welcome.GetHomeDataResponse.Home;
+import org.openhab.binding.netatmo.internal.welcome.GetHomeDataResponse.Person;
 import org.openhab.core.events.EventPublisher;
 import org.openhab.core.library.types.DateTimeType;
 import org.openhab.core.library.types.DecimalType;
