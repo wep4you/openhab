@@ -65,9 +65,9 @@ public enum NetatmoWelcomeAttributes {
      */
     public static NetatmoWelcomeAttributes fromString(String attribute) {
         if (!StringUtils.isEmpty(attribute)) {
-            for (NetatmoWelcomeAttributes attributes : NetatmoWelcomeAttributes.values()) {
-                if (attributes.toString().equalsIgnoreCase(attribute)) {
-                    return attributes;
+            for (NetatmoWelcomeAttributes enumAttribute : NetatmoWelcomeAttributes.values()) {
+                if (enumAttribute.getAttribute().equalsIgnoreCase(attribute)) {
+                    return enumAttribute;
                 }
             }
         }
