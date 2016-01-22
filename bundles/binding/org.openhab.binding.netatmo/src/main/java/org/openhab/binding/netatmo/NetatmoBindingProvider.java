@@ -8,8 +8,9 @@
  */
 package org.openhab.binding.netatmo;
 
-import org.openhab.binding.netatmo.internal.NetatmoMeasureType;
-import org.openhab.binding.netatmo.internal.NetatmoScale;
+import org.openhab.binding.netatmo.internal.weather.NetatmoMeasureType;
+import org.openhab.binding.netatmo.internal.weather.NetatmoScale;
+import org.openhab.binding.netatmo.internal.welcome.NetatmoWelcomeAttributes;
 import org.openhab.core.binding.BindingProvider;
 
 /**
@@ -21,6 +22,7 @@ import org.openhab.core.binding.BindingProvider;
  *
  * @author Andreas Brenk
  * @author Rob Nielsen
+ * @author Ing. Peter Weiss
  * @since 1.4.0
  */
 public interface NetatmoBindingProvider extends BindingProvider {
@@ -73,4 +75,45 @@ public interface NetatmoBindingProvider extends BindingProvider {
      *         it has a Netatmo binding, <code>null</code> otherwise
      */
     NetatmoScale getNetatmoScale(String itemName);
+    
+    
+	/**
+	 * Queries the Netatmo Welcome home of the given {@code itemName}.
+	 * 
+	 * @param itemName
+	 *            the itemName to query
+	 * @return the NetatmoWelcome HomeId of the Item identified by {@code itemName}
+	 *         if it has a NetatmoWelcome binding, <code>null</code> otherwise
+	 */
+	String getHomeId(String itemName);
+
+	/**
+	 * Queries the Netatmo Welcome Person of the given {@code itemName}.
+	 * 
+	 * @param itemName
+	 *            the itemName to query
+	 * @return the NetatmoWelcome PersonId of the Item identified by {@code itemName} if
+	 *         it has a NetatmoWelcome binding, <code>null</code> otherwise
+	 */
+	String getPersonId(String itemName);
+
+	/**
+	 * Queries the Netatmo Welcome Attribute of the given {@code itemName}.
+	 * 
+	 * @param itemName
+	 *            the itemName to query
+	 * @return the NetatmoWelcome Attribute of the Item identified by {@code itemName} if
+	 *         it has a NetatmoWelcome binding, <code>null</code> otherwise
+	 */
+	NetatmoWelcomeAttributes getAttribute(String itemName);
+
+	/**
+	 * Queries the Netatmo Welcome Camera of the given {@code itemName}.
+	 * 
+	 * @param itemName
+	 *            the itemName to query
+	 * @return the NetatmoWelcome CameraId of the Item identified by {@code itemName} if
+	 *         it has a NetatmoWelcome binding, <code>null</code> otherwise
+	 */
+	 String getCameraId(String itemName);
 }

@@ -6,7 +6,7 @@
  * which accompanies this distribution, and is available at
  * http://www.eclipse.org/legal/epl-v10.html
  */
-package org.openhab.binding.netatmo.internal.messages;
+package org.openhab.binding.netatmo.internal.weather;
 
 import static com.google.common.base.Charsets.UTF_8;
 
@@ -17,26 +17,27 @@ import com.google.common.io.Resources;
 
 /**
  * @author Andreas Brenk
+ * @author Rob Nielsen
  * @since 1.4.0
  */
-public class RefreshTokenRequestStub extends RefreshTokenRequest {
+public class MeasurementRequestStub extends MeasurementRequest {
 
-    protected static final String CLIENT_ID = "000000000000000000000000";
+    protected static final String ACCESS_TOKEN = "000000000000000000000000|11111111111111111111111111111111";
 
-    protected static final String CLIENT_SECRET = "11111111111111111111111111111111111";
+    protected static final String DEVICE_ID = "70:ee:50:00:02:20";
 
-    protected static final String REFRESH_TOKEN = "000000000000000000000000|22222222222222222222222222222222";
+    protected static final String MODULE_ID = "02:00:00:00:02:a0";
 
-    public static RefreshTokenRequestStub createRequest(final String resource) throws Exception {
-        return new RefreshTokenRequestStub(resource);
+    public static MeasurementRequestStub createRequest(final String resource) throws Exception {
+        return new MeasurementRequestStub(resource);
     }
 
     private final String response;
 
     private String content;
 
-    private RefreshTokenRequestStub(final String response) throws Exception {
-        super(CLIENT_ID, CLIENT_SECRET, REFRESH_TOKEN);
+    private MeasurementRequestStub(final String response) throws Exception {
+        super(ACCESS_TOKEN, DEVICE_ID, MODULE_ID);
 
         final URL resource = getClass().getResource(response);
 
@@ -45,6 +46,7 @@ public class RefreshTokenRequestStub extends RefreshTokenRequest {
         }
 
         this.response = Resources.toString(resource, UTF_8);
+
     }
 
     public String getContent() {
